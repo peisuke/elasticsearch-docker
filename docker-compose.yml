@@ -1,0 +1,26 @@
+version: '2'
+services:
+  elasticsearch:
+    build: es
+    volumes:
+        - es-data:/usr/share/elasticsearch/data
+    ports:
+        - 9200:9200
+    expose:
+        - 9300
+    ulimits:
+        nofile:
+            soft: 65536
+            hard: 65536
+        # https://github.com/docker-library/elasticsearch/issues/111
+        # uliimit: リソースの制限を拡大させている。
+  kibana:
+    build: kibana
+    links:
+        - elasticsearch:elasticsearch
+    ports:
+        - 5601:5601
+
+volumes:
+    es-data:
+        driver: local
